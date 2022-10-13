@@ -24,6 +24,11 @@ public class Board {
 		this.content = content;
 		this.writer = writer;
 	}
+	public Board(int no, String title, String content) {
+		this.no = no;
+		this.title = title;
+		this.content = content;
+	}
 	public Board(int no, String content) {
 		this.no = no;
 		this.content =content;
@@ -31,7 +36,7 @@ public class Board {
 	
 	@Override
 	public String toString() {
-		return "글번호 : " + no + " 글제목 : " + title + " 작성자 : " + writer + " 작성일시 : " +date + " 조회수 : " + count; 
+		return "글번호 : " + no + " 글제목 : " + title + " 작성자 : " + writer +  "글내용 : "+ content+ " 작성일시 : " +date + " 조회수 : " + count; 
 	}
 	public int getNo() {
 		return no;

@@ -12,6 +12,7 @@ public class DAO {
 	Connection conn;
 	Statement stmt;
 	ResultSet rs;
+	ResultSet rs2;
 	PreparedStatement psmt;
 	
 	public Connection getConnect() {

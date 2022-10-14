@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class CharStreamExample {
 	
 	public static void main(String[] args) {
-		read();
+		write();
 	}
 	public static void read() {
 		try {

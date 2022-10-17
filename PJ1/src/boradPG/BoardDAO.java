@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class BoardDAO extends DAO{
 	
 //로그인
@@ -161,6 +162,66 @@ public class BoardDAO extends DAO{
 			{
 				e.printStackTrace();
 			}finally {
+				disconnect();
+			}
+		}
+//댓글보기
+		public List<Reply> rpshow(int borid) {
+
+			List<Reply> list = new ArrayList<>();
+			conn = getConnect();
+			try {
+				stmt = conn.createStatement();
+				rs = stmt.executeQuery("select * from Preply where board_num = " + borid);
+				while(rs.next()) { //1번째 값을 불러와서
+					list.add(new Reply(rs.getInt("rep_seq"),
+							rs.getInt("board_num"),
+							rs.getString("rep_content"),
+							rs.getString("rep_writer"),
+							rs.getString("creation_date")
+							));
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}finally {
+				disconnect();
+			}
+			return list;
+		}
+//댓글달기
+		public void reply(int num,String writer,String content,int menu) {
+			String me = null;
+			if(menu==1) {
+				me = "G"; // 1번일때 공지사항
+			}else if(menu==2) {
+				me = "F"; // 2번일때 자유게시판
+			}else if(menu==3) {
+				me = "Q"; // 3번일떄 건의사항
+			}
+			conn = getConnect();
+			String bonum = null;
+			String sql = "insert into Preply(rep_seq,board_num,rep_content,rep_writer,creation_date)\r\n"
+					+ "values("
+					+ "Preply_seq.nextval, ?, ?, ?,sysdate)";
+			try {
+				stmt = conn.createStatement();
+				rs = stmt.executeQuery("select * from Pboard_"+me +" where board_num = '"+num+"'");
+				while(rs.next()) { //1번째 값을 불러와서
+					bonum = rs.getString("board_num");
+				}
+				psmt = conn.prepareStatement(sql);
+				psmt.setInt(1, num);
+				psmt.setString(2, content);
+				psmt.setString(3, writer);
+				if(num==Integer.parseInt(bonum)) {
+				System.out.println("댓글이 추가되었습니다");
+				
+				psmt.executeUpdate();
+				}
+			}catch (SQLException e) {
+				e.printStackTrace();
+			}
+			finally {
 				disconnect();
 			}
 		}

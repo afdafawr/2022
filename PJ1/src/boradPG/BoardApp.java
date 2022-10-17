@@ -45,7 +45,7 @@ public class BoardApp {
 			System.out.println("공지사항 게시판");
 			System.out.println("=====================");
 			dao.show(id,menu);
-			System.out.println("1.글쓰기 2.글 상세보기 3.댓글보기 0.돌아가기");
+			System.out.println("1.글쓰기 2.글 상세보기0.돌아가기");
 			menu2 = scn.nextInt();
 			if(menu2==1) {
 				scn.nextLine();
@@ -58,6 +58,19 @@ public class BoardApp {
 				System.out.println("글 번호를 입력하세요");
 				int no = scn.nextInt();
 				System.out.println(dao.getbor(no, menu));
+				scn.nextLine();
+				System.out.println("댓글을 보고싶다면 Y 돌아가려면 N 입력.");
+				String chk = scn.nextLine();
+				if(chk.equals("Y")) {
+					System.out.println((dao.rpshow(no)));
+					System.out.println("댓글을 쓰시겠습니까 Y/N");
+					String chk2 = scn.nextLine();
+					if(chk2.equals("Y")) {
+						System.out.println("내용을 입력하세요 >> " );
+						String rp = scn.nextLine();
+						dao.reply(no, id, rp,menu);
+					}
+				}
 			}
 		}else if(menu==2) {
 			System.out.println("자유게시판 출력");

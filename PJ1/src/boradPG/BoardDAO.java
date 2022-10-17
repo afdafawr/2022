@@ -225,4 +225,35 @@ public class BoardDAO extends DAO{
 				disconnect();
 			}
 		}
+//댓글삭제
+		public void delete(int menu, int num,String user) {
+			String me = null;
+			String name = null;
+			if(menu==1) {
+				me = "G"; // 1번일때 공지사항
+			}else if(menu==2) {
+				me = "F"; // 2번일때 자유게시판
+			}else if(menu==3) {
+				me = "Q"; // 3번일떄 건의사항
+			}
+			conn = getConnect();
+			try {
+				stmt = conn.createStatement();
+				rs = stmt.executeQuery("select * from Pboard_"+ me +" where board_writer = '"+user+"'");
+				while(rs.next()) { //1번째 값을 불러와서
+					name = rs.getString("board_writer");
+				}
+				if(name.equals(user)) {
+				int r = stmt.executeUpdate("delete from Pboard_"+me+" where board_num="+num); //insert,delete,update
+				System.out.println(r +"건 삭제 되었습니다");
+				}
+				else {
+					System.out.println("지울수 없습니다");
+				}
+			} catch (Exception e) {
+				System.out.println("지울수 없습니다");
+			}finally {
+				disconnect();
+			}
+		}
 }

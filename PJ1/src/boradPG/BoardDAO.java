@@ -256,4 +256,8 @@ public class BoardDAO extends DAO{
 				disconnect();
 			}
 		}
+// 입출력 반복
+		public void abc() {
+			
+		}
 }

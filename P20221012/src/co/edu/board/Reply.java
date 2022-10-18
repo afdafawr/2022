@@ -62,8 +62,4 @@ public class Reply {
 	public void setCreation_date(String creation_date) {
 		this.creation_date = creation_date;
 	}
-	
-	
-	
-	
 }

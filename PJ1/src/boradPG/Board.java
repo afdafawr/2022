@@ -8,11 +8,30 @@ public class Board {
 	private String writer; // 글쓴이 user로 할거
 	private String date; // 날짜
 	private int cnt; // 조회수
+	private int mind;
 	
 	public Board() {};
+	public Board(int no) {
+		this.no = no;
+	}
 	public Board(String title, String content) {
 		this.title = title;
 		this.content = content;
+	}
+	public Board(int no, String content) {
+		this.no = no;
+		this.content = content;
+	}
+	
+	public Board(int no, String title, String content, String writer, String date, int cnt, int mind) {
+		super();
+		this.no = no;
+		this.title = title;
+		this.content = content;
+		this.writer = writer;
+		this.date = date;
+		this.cnt = cnt;
+		this.mind = mind;
 	}
 	public Board(int no, String title, String content, String writer, String date, int cnt) {
 		this.no = no;
@@ -21,6 +40,13 @@ public class Board {
 		this.writer = writer;
 		this.date = date;
 		this.cnt = cnt;
+	}
+	
+	public int getMind() {
+		return mind;
+	}
+	public void setMind(int mind) {
+		this.mind = mind;
 	}
 	public int getNo() {
 		return no;
@@ -62,7 +88,7 @@ public class Board {
 	@Override
 	public String toString() {
 		return "글번호 " + no + " 글제목 " + title + " 글내용 " + content + " 글쓴이 " + writer + " 글쓴날짜 " + date
-				+ " 조회수 " + cnt;
+				+ " 조회수 " + cnt + "좋아요수 " + mind;
 	}
 	
 	

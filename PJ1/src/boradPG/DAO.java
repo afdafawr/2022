@@ -18,7 +18,6 @@ public class DAO {
 	try {
 		Class.forName("oracle.jdbc.driver.OracleDriver");
 		conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "hr", "hr"); //url 사용자계정 pw순
-		System.out.println("연결 성공");
 	}catch(Exception e) {
 		System.out.println("연결 실패");
 	}

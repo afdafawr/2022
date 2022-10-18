@@ -48,8 +48,8 @@ public class Reply {
 	}
 	@Override
 	public String toString() {
-		return "댓글번호 " + rep_seq + " 글번호 " + board_num + " 댓글내용" + rep_content
-				+ " 글쓴이" + rep_writer + " 글쓴날짜 " + creation_date + "\n";
+		return "댓글번호 " + rep_seq + " 글번호 " + board_num + " 댓글내용 " + rep_content
+				+ " 글쓴이 " + rep_writer + " 글쓴날짜 " + creation_date;
 	}
 	
 	

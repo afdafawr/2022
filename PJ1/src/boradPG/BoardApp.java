@@ -2,6 +2,7 @@ package boradPG;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.InputMismatchException;
 
 
 public class BoardApp {
@@ -12,9 +13,10 @@ public class BoardApp {
 		boolean check = true;
 		int menu, menu2;
 //관리자 id는 hr/hr.
-	
+		
 		while(true) {
 		// 로그인,회원가입
+			
 			if(check!=false) {
 			System.out.println("==================");
 			System.out.println("1.로그인 2.회원가입");
@@ -45,7 +47,13 @@ public class BoardApp {
 		
 		//로그인이 잘 됐나 안됐나 확인하는곳. 잘됐으면 밑에 이제 시작.
 		else {
-		System.out.println("1.공지사항 2.자유게시판 3.건의사항 4.회원관리 5.모든글보기 0.종료");
+		if(id.equals("hr")) {
+			System.out.println("======================");
+			System.out.println("관리자 계정입니다");
+			System.out.println("======================");
+			
+		}
+		System.out.println("1.공지사항 2.자유게시판 3.건의사항 4.회원관리 5.모든글보기 6.파일로 만들기 0.종료");
 		menu = scn.nextInt();
 	
 		if(menu==1) {
@@ -102,6 +110,7 @@ public class BoardApp {
 			System.out.println("자유 게시판");
 			System.out.println("==================================================================================================");
 			dao.show(id,menu);
+			System.out.println("==================================================================================================");
 			System.out.println("1.글쓰기 2.글 상세보기 3.글 삭제 4.글 수정 0.돌아가기");
 			menu2 = scn.nextInt();
 			if(menu2==1) {
@@ -145,6 +154,7 @@ public class BoardApp {
 			System.out.println("건의사항 게시판");
 			System.out.println("==================================================================================================");
 			dao.show(id,menu);
+			System.out.println("==================================================================================================");
 			System.out.println("1.글쓰기 2.글 상세보기 3. 글 삭제 4.글 수정 0.돌아가기");
 			menu2 = scn.nextInt();
 			if(menu2==1) {
@@ -197,9 +207,22 @@ public class BoardApp {
 			System.out.println("관리자 메뉴");
 			System.out.println("==================================================================================================");
 			if(id.equals("hr")) {
-				System.out.println("1.게시글 삭제, 2.게시글 수정, 3.회원 관리 0.돌아가기");
-				
-			}else {
+				System.out.println("1.게시글 삭제, 2.게시글 수정 0.돌아가기");
+				int me = scn.nextInt();
+				if(me==1) {
+					dao.allshow();
+					System.out.println("삭제할 글 번호를 입력하세요");
+					int del = scn.nextInt();
+					dao.delete(menu, del, id);
+				}else if(me==2) {
+					System.out.println("블라인드 할 글의 번호를 입력하세요");
+					int del = scn.nextInt();
+					dao.blind(del);
+				}else if(me==0) {
+					
+				}
+			}
+			else {
 			System.out.println("관리자가 아닙니다");
 			}
 		}else if(menu == 5) {
@@ -223,17 +246,19 @@ public class BoardApp {
 				System.out.println("다음 페이지 출력하려면 엔터를 치시오");
 				scn.nextLine();
 			}
-			}catch(Exception e) {	
+			}catch(IndexOutOfBoundsException e) {
 				System.out.println("마지막페이지 입니다");
 				System.out.println("==================================================================================================");
-				}
+			}
+			}
+		else if(menu==6) {
+			dao.BoardDbToFile();
 		}
-		
 		else if(menu==0) {
 			System.out.println("게시판을 종료합니다");
 			break;
 		}
 		}
 		}
-		}
-}
+	}
+}	

@@ -1,5 +1,7 @@
 package boradPG;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +83,9 @@ public class BoardDAO extends DAO{
 		try {
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery("select * from Pboard_"+ me +" order by 1");
+			if(menu==4) {
+				
+			}
 			while(rs.next()) { //1번째 값을 불러와서
 				bor.add(new Board(rs.getInt("board_num"), 
 						rs.getString("board_title"),
@@ -222,7 +227,7 @@ public class BoardDAO extends DAO{
 				disconnect();
 			}
 		}
-//댓글삭제
+//글삭제
 		public void delete(int menu, int num,String user) {
 			String me = null;
 			String name = null;
@@ -236,20 +241,25 @@ public class BoardDAO extends DAO{
 			conn = getConnect();
 			try {
 				stmt = conn.createStatement();
-				if(user.equals("hr")) {
-					rs = stmt.executeQuery("select * from Pboard_"+ me);	
-				}else
-				rs = stmt.executeQuery("select * from Pboard_"+ me +" where board_writer = '"+user+"'");
+				if(menu==4) {
+					System.out.println("4번진입");
+					rs = stmt.executeQuery("SELECT * FROM Pboard_G where board_num = '"+num
+							+"' UNION SELECT * FROM Pboard_F where board_num = '"+ num
+							+"' UNION SELECT * FROM Pboard_Q where board_num = '"+ num +"'");
+				}else {
+					rs = stmt.executeQuery("select * from Pboard_"+ me +" where board_num = '"+num+"'");
+				}
 				while(rs.next()) { //1번째 값을 불러와서
 					name = rs.getString("board_writer");
-				}
-				if(name.equals(user) || user.equals("hr")) {
-				int r = stmt.executeUpdate("delete from Pboard_"+me+" where board_num="+num); //insert,delete,update
-				System.out.println(r +"건 삭제 되었습니다");
-				}
-				else {
-					System.out.println("지울수 없습니다");
-				}
+				}if(menu==4 && user.equals("hr")) {
+					int r = stmt.executeUpdate("delete from Pboard_G where board_num="+num);
+					r = r + stmt.executeUpdate("delete from Pboard_F where board_num="+num);
+					r = r + stmt.executeUpdate("delete from Pboard_Q where board_num="+num);
+					System.out.println(r + "건 삭제 되었습니다.");
+				}else if(name.equals(user) || user.equals("hr")) {
+					int r = stmt.executeUpdate("delete from Pboard_"+me+" where board_num="+num); //insert,delete,update
+					System.out.println(r +"건 삭제 되었습니다");
+					}
 			} catch (Exception e) {
 				System.out.println("지울수 없습니다");
 			}finally {
@@ -369,4 +379,47 @@ public class BoardDAO extends DAO{
 		}
 	
 		}
+//관리자의 가리기
+	public void blind(int num) {
+	conn = getConnect();
+	try {
+		stmt = conn.createStatement();
+		rs = stmt.executeQuery("SELECT * FROM Pboard_G where board_num = '"+num
+					+"' UNION SELECT * FROM Pboard_F where board_num = '"+ num
+					+"' UNION SELECT * FROM Pboard_Q where board_num = '"+ num +"'");
+		
+			int r = stmt.executeUpdate("update Pboard_G set board_content = '관리자에 의해 삭제된 글입니다' where board_num = '"+num +"'");
+			r = r + stmt.executeUpdate("update Pboard_F set board_content = '관리자에 의해 삭제된 글입니다' where board_num = '"+num +"'");
+			r = r + stmt.executeUpdate("update Pboard_Q set board_content = '관리자에 의해 삭제된 글입니다' where board_num = '"+num +"'");
+			System.out.println(r + "건 블라인드 처리되었습니다.");
+	
+	} catch (Exception e) {
+		System.out.println("지울수 없습니다");
+	}finally {
+		disconnect();
 	}
+	}
+//파일 만들기
+	public void BoardDbToFile() {
+		
+		try {
+		FileWriter fw = new FileWriter("c:/Temp/BoardFile.txt");
+		BoardDAO dao = new BoardDAO();
+		List<Board> list = new ArrayList<Board>();
+		
+		for(Board emp : list) {
+			int no = emp.getNo();
+			String name = emp.getTitle();
+			String content = emp.getContent();
+			String writer = emp.getWriter();
+			String date = emp.getDate();
+			fw.write("글번호 " +no +" 글 제목 : "+ name+" 글 내용 : " + content+" 글쓴이 : " + writer+" 글쓴날짜 : "+ date + "\n");	
+		}
+		System.out.println("파일로 저장 완료!!");
+		fw.close();
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+	
+}
+}

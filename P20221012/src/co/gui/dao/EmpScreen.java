@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +18,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-
-import co.edu.jdbc.Employee;
 
 public class EmpScreen extends JFrame implements ActionListener,MouseListener{
 	
@@ -92,9 +91,16 @@ public class EmpScreen extends JFrame implements ActionListener,MouseListener{
 	//DB조회 후 table 에 결과를 반영
 	public void searchData() {
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		//화면에 조회된 결과 잇으면..clear
+		int allcount = model.getRowCount();
+		
+		for(int i=0; i<allcount; i++) {
+			model.removeRow(0);
+		}
+		
 		String[] recode = new String[6];
 		List<EmployeeVO> list = new ArrayList<EmployeeVO>();
-		list = dao.empList(new EmployeeVO(0, null, null, null, null, null));
+		list = dao.empList(new EmployeeVO(Integer.parseInt(fields[0].getText()), fields[1].getText(), fields[2].getText(), fields[3].getText(), fields[4].getText(), fields[5].getText()));
 		for(int i=0; i<list.size(); i++) {
 			recode[0] = String.valueOf(list.get(i).getEmployeeId());
 			recode[1] = list.get(i).getFirstName();
@@ -104,18 +110,44 @@ public class EmpScreen extends JFrame implements ActionListener,MouseListener{
 			recode[5] = list.get(i).getJobId();
 			model.addRow(recode);			
 		}
-		model.addRow(recode);
 	}
-	
-	
+	//삭제를 위한메소드
+	public void removeData() {
+
+		int selectedRow = table.getSelectedRow(); // 선택된 row를 반환
+		if(selectedRow <0) {
+			return;
+		}		
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		int empId = Integer.parseInt((String) model.getValueAt(selectedRow, 0));
+		
+		dao.deleteEmp(empId);
+		
+		model.removeRow(selectedRow); //화면삭제.
+	}
+//추가를 위한 메소드
+	public void addData() {
+		String[] record = new String[6];
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		
+		for(int i=0; i<fields.length; i++) {
+		record[i] = fields[i].getText();
+		}
+		EmployeeVO emp = new EmployeeVO(0, record[1], record[2], record[3], record[4], record[5]);
+		
+		dao.insertEmp(emp);
+		record[0] = String.valueOf(emp.getEmployeeId());
+		
+		model.addRow(record);
+	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		//addBtn,delBtn,findBtn....
 		Object src = e.getSource();
 		if(src == addBtn) {
-			
+			addData();
 		}else if(src == delBtn) {
-			
+			removeData();
 		}else if(src == findBtn) {
 			searchData();
 		}else if(src == initBtn) {
@@ -124,14 +156,7 @@ public class EmpScreen extends JFrame implements ActionListener,MouseListener{
 	}
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		int selectedRow = table.getSelectedRow(); // 선택된 row를 반환
-		
-		DefaultTableModel model = (DefaultTableModel) table.getModel();
-		System.out.println(model.getValueAt(selectedRow, 0)); // employee_id
-		int empId = Integer.parseInt((String) model.getValueAt(selectedRow, 0));
-		
-		dao.deleteEmp(empId);
-		
+				
 	}
 	// end of actionPerformed(actionEvent e)
 	

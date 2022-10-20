@@ -7,25 +7,40 @@ import java.util.List;
 public class EmpDAO extends DAO{
 	
 	// 입력
-	public void insertEmp(EmployeeVO vo) {
+	public EmployeeVO  insertEmp(EmployeeVO vo) {
+		
 		getConnect();
+		String seq = "select employees_seq.nextval from dual";
+		
 		String sql = "insert into empl (employee_id, first_name, last_name, email, hire_date, job_id)"
-				+ "values(employees_seq.nextval,?,?,?,?,?)";
+				+ "values(?,?,?,?,?,?)";
 		
 		try {
+			//sequence 가지고오기위함
+			int seqInt = 0;
+			psmt = conn.prepareStatement(seq);
+			rs = psmt.executeQuery();
+			if(rs.next()) {
+				seqInt = rs.getInt(1); // 첫번째 칼럼을 가져오겠다
+			}
+			//insert 작업
 			psmt = conn.prepareStatement(sql);
-			psmt.setString(1, vo.getFirstName());
-			psmt.setString(2, vo.getLastName());
-			psmt.setString(3, vo.getEmail());
-			psmt.setString(4, vo.getHireDate());
-			psmt.setString(5, vo.getJobId());
+			psmt.setInt(1, seqInt);
+			psmt.setString(2, vo.getFirstName());
+			psmt.setString(3, vo.getLastName());
+			psmt.setString(4, vo.getEmail());
+			psmt.setString(5, vo.getHireDate());
+			psmt.setString(6, vo.getJobId());
 			int r = psmt.executeUpdate();
 			System.out.println(r + "건 입력되었습니다.");
+			//새로운 입력하게 사원번호.
+			vo.setEmployeeId(seqInt);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
 			disconnect();
 		}
+		return vo;
 	}
 	//삭제
 	public void deleteEmp(int employeeId) {
@@ -73,7 +88,7 @@ public class EmpDAO extends DAO{
 				+ " and last_name like '%'||?||'%' "
 				+ " and email like '%'||?||'%' "
 				+ " and to_char(hire_date, 'yyyy-mm-dd') like '%'||?||'%' "
-				+ " and job_id = nvl(?, job_id)"
+				+ " and job_id = nvl(?, job_id) "
 				+ " order by employee_id";
 		
 		try {

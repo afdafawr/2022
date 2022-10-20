@@ -19,7 +19,7 @@ public class BoardApp {
 			
 			if(check!=false) {
 			System.out.println("==================");
-			System.out.println("1.로그인 2.회원가입");
+			System.out.println("1.로그인 2.회원가입 3.비밀번호 찾기");
 			System.out.println("==================");
 			int first = scn.nextInt();
 			if(first==1) {
@@ -39,24 +39,34 @@ public class BoardApp {
 			id = scn.nextLine();
 			System.out.println("비밀번호를 입력하시오");
 			String pw = scn.nextLine();
-			System.out.println("닉네임을 입력하시오");
-			String name = scn.nextLine();
-			check = dao.sign(new User(id, pw, name));
+			System.out.println("번호를 입력하시오");
+			String tel = scn.nextLine();
+			System.out.println("메일을 입력하시오");
+			String mail = scn.nextLine();
+			check = dao.sign(new User(id, pw, tel,mail));
+			}
+			else if(first==3) {
+				scn.nextLine();
+				System.out.println("찾고자하는 아이디를 입력하세요");
+				String sid = scn.nextLine();
+				dao.searchpw(sid);
 			}
 			}
+			
 		
 		//로그인이 잘 됐나 안됐나 확인하는곳. 잘됐으면 밑에 이제 시작.
 		else {
 		if(id.equals("hr")) {
-			System.out.println("======================");
 			System.out.println("관리자 계정입니다");
-			System.out.println("======================");
 			
 		}
-		System.out.println("1.공지사항 2.자유게시판 3.건의사항 4.회원관리 5.모든글보기 6.파일로 만들기 0.종료");
+		System.out.println("==================================================================================================");
+		System.out.println("1.공지사항 2.자유게시판 3.건의사항 4.관리자 메뉴 5.모든글보기 6.파일로 만들기 0.종료");
+		System.out.println("==================================================================================================");
 		menu = scn.nextInt();
 	
 		if(menu==1) {
+			while(true) {
 			System.out.println("==================================================================================================");
 			System.out.println("공지사항 게시판");
 			System.out.println("==================================================================================================");
@@ -71,7 +81,10 @@ public class BoardApp {
 				String title = scn.nextLine();
 				System.out.println("글 내용을 입력하세요");
 				String content = scn.nextLine();
+				System.out.println("==================================================================================================");
 				dao.write(new Board(title, content),id,menu);
+				System.out.println("==================================================================================================");
+				
 				}
 				else {
 					System.out.println("관리자가 아닙니다");
@@ -80,14 +93,24 @@ public class BoardApp {
 				System.out.println("글 번호를 입력하세요");
 				int no = scn.nextInt();
 				System.out.println(dao.getbor(no, menu));
+				
 				scn.nextLine();
+				System.out.println("==================================================================================================");
+				System.out.println("이 글을 좋아요 하시겠습니까 ? Y/N");
+				String chkk = scn.nextLine();
+				dao.mind(no,chkk,menu);
+				System.out.println("==================================================================================================");
 				System.out.println("댓글을 보고싶다면 Y 돌아가려면 N 입력.");
 				String chk = scn.nextLine();
-				if(chk.equals("Y")) {
-					System.out.println(dao.rpshow(no));
+				if(chk.toUpperCase().equals("Y")) {
+					for(Reply r: dao.rpshow(no))
+					{
+						System.out.println(r);
+					}
+				System.out.println("==================================================================================================");
 					System.out.println("댓글을 쓰시겠습니까 Y/N");
 					String chk2 = scn.nextLine();
-					if(chk2.equals("Y")) {
+					if(chk2.toUpperCase().equals("Y")) {
 						System.out.println("내용을 입력하세요 >> " );
 						String rp = scn.nextLine();
 						dao.reply(no, id, rp,menu);
@@ -104,8 +127,12 @@ public class BoardApp {
 				scn.nextLine();
 				String content = scn.nextLine();
 				dao.update(new Board(borid, content),id,menu);
+			}else if(menu2 == 0) {
+				break;
+			}
 			}
 		}else if(menu==2) {
+			while(true) {
 			System.out.println("==================================================================================================");
 			System.out.println("자유 게시판");
 			System.out.println("==================================================================================================");
@@ -124,14 +151,24 @@ public class BoardApp {
 				System.out.println("글 번호를 입력하세요");
 				int no = scn.nextInt();
 				System.out.println(dao.getbor(no, menu));
+				System.out.println("==================================================================================================");
 				scn.nextLine();
+				System.out.println("이 글을 좋아요 하시겠습니까 ? Y/N");
+				String chkk = scn.nextLine();
+				dao.mind(no,chkk,menu);
+				System.out.println("==================================================================================================");
+				
+				
 				System.out.println("댓글을 보고싶다면 Y 돌아가려면 N 입력.");
 				String chk = scn.nextLine();
 				if(chk.equals("Y")) {
-					System.out.println((dao.rpshow(no)));
+					for(Reply r: dao.rpshow(no))
+					{
+						System.out.println(r);
+					}
 					System.out.println("댓글을 쓰시겠습니까 Y/N");
 					String chk2 = scn.nextLine();
-					if(chk2.equals("Y")) {
+					if(chk2.toUpperCase().equals("Y")) {
 						System.out.println("내용을 입력하세요 >> " );
 						String rp = scn.nextLine();
 						dao.reply(no, id, rp,menu);
@@ -148,8 +185,12 @@ public class BoardApp {
 				scn.nextLine();
 				String content = scn.nextLine();
 				dao.update(new Board(borid, content),id,menu);
+			}else if(menu2 == 0) {
+				break;
+			}
 			}
 		}else if(menu==3) {
+			while(true) {
 			System.out.println("==================================================================================================");
 			System.out.println("건의사항 게시판");
 			System.out.println("==================================================================================================");
@@ -168,23 +209,26 @@ public class BoardApp {
 				System.out.println("글 번호를 입력하세요");
 				int no = scn.nextInt();
 				System.out.println(dao.getbor(no, menu));
+				System.out.println("==================================================================================================");
 //공감수 출력		
 				scn.nextLine();
 				System.out.println("이 글을 좋아요 하시겠습니까 ? Y/N");
 				String chkk = scn.nextLine();
 				dao.mind(no,chkk,menu);
+				System.out.println("==================================================================================================");
 				
 				System.out.println("댓글을 보고싶다면 Y 돌아가려면 N 입력.");
 				String chk = scn.nextLine();
-				System.out.println(chk);
 				if(chk.equals("Y")) {
 					for(Reply r: dao.rpshow(no))
 					{
 						System.out.println(r);
 					}
+					System.out.println("==================================================================================================");
 					System.out.println("댓글을 쓰시겠습니까 Y/N");
 					String chk2 = scn.nextLine();
-					if(chk2.equals("Y")) {
+					
+					if(chk2.toUpperCase().equals("Y")) {
 						System.out.println("내용을 입력하세요 >> " );
 						String rp = scn.nextLine();
 						dao.reply(no, id, rp,menu);
@@ -201,8 +245,12 @@ public class BoardApp {
 				scn.nextLine();
 				String content = scn.nextLine();
 				dao.update(new Board(borid, content),id,menu);
+			}else if(menu2==0) {
+				break;
+			}
 			}
 		}else if(menu==4) {
+			while(true) {
 			System.out.println("==================================================================================================");
 			System.out.println("관리자 메뉴");
 			System.out.println("==================================================================================================");
@@ -219,17 +267,15 @@ public class BoardApp {
 					int del = scn.nextInt();
 					dao.blind(del);
 				}else if(me==0) {
-					
+					break;
+				}
+				
+			}else {
+				System.out.println("관리자가 아닙니다");
 				}
 			}
-			else {
-			System.out.println("관리자가 아닙니다");
-			}
 		}else if(menu == 5) {
-			System.out.println("===============");
-			System.out.println("몇개씩 보시겠습니까?");
-			System.out.println("===============");
-
+			
 			List<Board> boa = dao.allshow();
 			System.out.println("몇줄씩 볼껀가요?");
 			int b = scn.nextInt(); // 줄바꿈할 갯수
@@ -248,8 +294,7 @@ public class BoardApp {
 			}
 			}catch(IndexOutOfBoundsException e) {
 				System.out.println("마지막페이지 입니다");
-				System.out.println("==================================================================================================");
-			}
+				}
 			}
 		else if(menu==6) {
 			dao.BoardDbToFile();

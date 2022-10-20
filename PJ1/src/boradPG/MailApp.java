@@ -1,4 +1,4 @@
-package co.gui;
+package boradPG;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -19,7 +19,7 @@ public class MailApp {
 
 //		String subject = "Hello JavaMail API Test";
 		String fromMail = from;// "cholee@yedam.ac";
-		String fromName = "Charles";
+		String fromName = "비밀번호 재설정 입니다";
 		String toMail = to;// "leadon@naver.com"; // 콤마(,) 나열 가능
 
 		// mail contents

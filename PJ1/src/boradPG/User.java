@@ -3,20 +3,28 @@ package boradPG;
 public class User {
 	private String id; // 아이디
 	private String pw; // 비밀번호
-	private String user; // 닉네임
+	private String tel; // 전화번호
+	private String mail;
 	
 	
 	
+	public String getMail() {
+		return mail;
+	}
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
 	public User(String id, String pw) {
 		super();
 		this.id = id;
 		this.pw = pw;
 	}
-	public User(String id, String pw, String user) {
+	public User(String id, String pw, String tel,String mail) {
 		super();
 		this.id = id;
 		this.pw = pw;
-		this.user = user;
+		this.tel = tel;
+		this.mail = mail;
 	}
 	public String getId() {
 		return id;
@@ -31,14 +39,14 @@ public class User {
 		this.pw = pw;
 	}
 	public String getUser() {
-		return user;
+		return tel;
 	}
-	public void setUser(String user) {
-		this.user = user;
+	public void setUser(String tel) {
+		this.tel = tel;
 	}
 	@Override
 	public String toString() {
-		return "[id=" + id + ", pw=" + pw + ", user=" + user + "]";
+		return "[id=" + id + ", pw=" + pw + ", tel=" + tel + "]";
 	}
 	
 	

@@ -83,12 +83,11 @@ public class Board {
 	}
 	public void setCnt(int cnt) {
 		this.cnt = cnt;
-	}
+	}	
 	
 	@Override
 	public String toString() {
-		return "글번호 " + no + " 글제목 " + title + " 글내용 " + content + " 글쓴이 " + writer + " 글쓴날짜 " + date
-				+ " 조회수 " + cnt + "좋아요수 " + mind;
+		return String.format("글번호 %3s 글제목 %3s 글내용 %3s 글쓴이 %3s 글쓴날짜 %3s 조회수 %s 좋아요수 %s", no,title,content,writer,date,cnt,mind);
 	}
 	
 	

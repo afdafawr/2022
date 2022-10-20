@@ -5,9 +5,11 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
 
 public class BoardDAO extends DAO{
-	
+	Scanner scn = new Scanner(System.in);
 //로그인
 	public boolean check(String id, String pw){
 		boolean chk = true;
@@ -40,8 +42,8 @@ public class BoardDAO extends DAO{
 	public boolean sign(User user2) {
 		boolean chk = false;
 		List<String> ids = new ArrayList<>();
-		String sql = "insert into Puser(user_id,user_pw,user_name)"
-				+ "	values(?,?,?)";
+		String sql = "insert into Puser(user_id,user_pw,user_tel,user_mail)"
+				+ "	values(?,?,?,?)";
 		conn = getConnect();
 		
 		try {
@@ -54,10 +56,12 @@ public class BoardDAO extends DAO{
 			System.out.println(user2.getId());
 			System.out.println(user2.getPw());
 			System.out.println(user2.getUser());
+			System.out.println(user2.getMail());
 			psmt = conn.prepareStatement(sql);
 			psmt.setString(1, user2.getId());
 			psmt.setString(2, user2.getPw());
 			psmt.setString(3, user2.getUser());
+			psmt.setString(4, user2.getMail());
 			System.out.println(user2.getId()+"님 회원가입 완료");
 			psmt.executeUpdate();			
 		} catch (SQLException e) {
@@ -79,7 +83,6 @@ public class BoardDAO extends DAO{
 			me = "Q"; // 3번일떄 건의사항
 		}
 		conn = getConnect();
-		System.out.println("글목록 연결성공");
 		try {
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery("select * from Pboard_"+ me +" order by 1");
@@ -132,6 +135,9 @@ public class BoardDAO extends DAO{
 							,rs.getInt("cnt")
 							,rs.getInt("mind"));
 				}
+				sql = "update Pboard_"+me+" set cnt = cnt+1 where board_num = " + borId;
+				psmt = conn.prepareStatement(sql);
+				psmt.executeUpdate();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}finally {
@@ -242,7 +248,6 @@ public class BoardDAO extends DAO{
 			try {
 				stmt = conn.createStatement();
 				if(menu==4) {
-					System.out.println("4번진입");
 					rs = stmt.executeQuery("SELECT * FROM Pboard_G where board_num = '"+num
 							+"' UNION SELECT * FROM Pboard_F where board_num = '"+ num
 							+"' UNION SELECT * FROM Pboard_Q where board_num = '"+ num +"'");
@@ -260,6 +265,9 @@ public class BoardDAO extends DAO{
 					int r = stmt.executeUpdate("delete from Pboard_"+me+" where board_num="+num); //insert,delete,update
 					System.out.println(r +"건 삭제 되었습니다");
 					}
+				else {
+					System.out.println("지울수 없습니다");
+				}
 			} catch (Exception e) {
 				System.out.println("지울수 없습니다");
 			}finally {
@@ -325,14 +333,14 @@ public class BoardDAO extends DAO{
 				if(user.equals("hr")) {
 					int r= psmt.executeUpdate();
 					System.out.println(r+"건이 수정되었습니다");
-				}
-				else if(name.equals(user)||user.equals("hr")){ 
+			}
+			}
+			else if(name.equals(user)||user.equals("hr")){ 
 					int r= psmt.executeUpdate();
 					System.out.println(r+"건이 수정되었습니다");
-				}
-				else {
+			}
+			else {
 					System.out.println("관리자가 아닙니다!!");
-				}
 			}
 		}catch (SQLException e) {
 			e.printStackTrace();
@@ -346,6 +354,7 @@ public class BoardDAO extends DAO{
 	public void mind(int no,String chk,int menu) {
 		conn = getConnect();
 		System.out.println(chk);
+		
 		int mind = 0;
 		String sql = null;
 		String me = null;
@@ -356,7 +365,7 @@ public class BoardDAO extends DAO{
 		}else if(menu==3) {
 			me = "Q"; // 3번일떄 건의사항
 		}		
-		if(chk.equals("Y")) {
+		if(chk.toUpperCase().equals("Y")) {
 		sql = "update Pboard_" + me + " set mind = mind + 1 where board_num = " + no;
 		}
 		try {
@@ -369,6 +378,7 @@ public class BoardDAO extends DAO{
 			}
 			psmt = conn.prepareStatement(sql);
 			psmt.executeUpdate();
+			mind++;
 			System.out.println("좋아요 수 :" + mind);
 			
 		}catch (SQLException e) {
@@ -405,7 +415,7 @@ public class BoardDAO extends DAO{
 		try {
 		FileWriter fw = new FileWriter("c:/Temp/BoardFile.txt");
 		BoardDAO dao = new BoardDAO();
-		List<Board> list = new ArrayList<Board>();
+		List<Board> list = dao.allshow();
 		
 		for(Board emp : list) {
 			int no = emp.getNo();
@@ -420,6 +430,62 @@ public class BoardDAO extends DAO{
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
-	
+
 }
+//비번찾기
+	public void searchpw(String id) {
+		Random random = new Random();		//랜덤 함수 선언
+		int createNum = 0;  			//1자리 난수
+		String ranNum = ""; 			//1자리 난수 형변환 변수
+        	int letter    = 6;			//난수 자릿수:6
+		String resultNum = "";  		//결과 난수
+		
+		for (int i=0; i<letter; i++) { 
+            		
+			createNum = random.nextInt(9);		//0부터 9까지 올 수 있는 1자리 난수 생성
+			ranNum =  Integer.toString(createNum);  //1자리 난수를 String으로 형변환
+			resultNum += ranNum;			//생성된 난수(문자열)을 원하는 수(letter)만큼 더하며 나열
+		}	
+        System.out.println(resultNum);
+		
+		conn = getConnect();
+		MailApp mapp = new MailApp();
+		SmsApp app = new SmsApp();
+		String pw = "";
+		String tel = "";
+		String mail = "";
+		//from 보내는사람
+		String sql = "select * from Puser where user_id = '" + id + "'";
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			while(rs.next()) { //1번째 값을 불러와서
+				pw = rs.getString("user_pw");
+				tel = rs.getString("user_tel");
+				mail = rs.getString("user_mail");
+			}
+//		app.sendSms(tel, "01045765728", resultNum);
+		mapp.sendMail("dodgo12@gmail.com", mail, "인증번호 발급", resultNum);
+		System.out.println("가입하신 메일로 인증번호가 발송되었습니다.");
+		System.out.println("발급된 인증번호를 입력하세요");
+		String checknum = scn.nextLine();
+		if(checknum.equals(resultNum)) {
+			System.out.println("비밀번호를 재설정합니다.");
+			System.out.println("재설정할 비밀번호를 입력해주세요");
+			String cgpw = scn.nextLine();
+			sql = "update Puser set user_pw = '" + cgpw + "'";
+			stmt.executeUpdate(sql);
+			System.out.println("비밀번호가 변경되었습니다");
+		}
+			System.out.println(pw);
+			System.out.println(tel);
+			
+//			app.sendSms(tel, "01045765728", pw);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		 // 하나 불러오겟다	
+	}
 }

@@ -18,9 +18,9 @@ public class BoardApp {
 		// 로그인,회원가입
 			
 			if(check!=false) {
-			System.out.println("==================");
-			System.out.println("1.로그인 2.회원가입 3.비밀번호 찾기");
-			System.out.println("==================");
+			System.out.println("==================================================================================================");
+			System.out.println("1.로그인 2.회원가입 3.아이디 찾기 4.비밀번호 찾기");
+			System.out.println("==================================================================================================");
 			int first = scn.nextInt();
 			if(first==1) {
 			System.out.println("로그인");
@@ -44,8 +44,14 @@ public class BoardApp {
 			System.out.println("메일을 입력하시오");
 			String mail = scn.nextLine();
 			check = dao.sign(new User(id, pw, tel,mail));
+			}else if(first==3) {
+				System.out.println("메일주소를 입력하세요");
+				scn.nextLine();
+				String mail = scn.nextLine();
+				System.out.println(mail);
+				dao.searchid(mail);
 			}
-			else if(first==3) {
+			else if(first==4) {
 				scn.nextLine();
 				System.out.println("찾고자하는 아이디를 입력하세요");
 				String sid = scn.nextLine();
@@ -117,16 +123,25 @@ public class BoardApp {
 					}
 				}
 			}else if(menu2 == 3) {
+				if(id.equals("hr")) {
 				System.out.println("삭제할 글 번호를 입력하세요!!");
 				int no = scn.nextInt();
 				dao.delete(menu,no,id);
+				}
+				else {
+					System.out.println("관리자가 아닙니다");
+				}
 			}else if(menu2 ==4) {
+				if(id.equals("hr")) {
 				System.out.println("변경할 글번호를 입력하시오 >>");
 				int borid = scn.nextInt();
 				System.out.println("변경할 내용을 입력하시오 >>");
 				scn.nextLine();
 				String content = scn.nextLine();
 				dao.update(new Board(borid, content),id,menu);
+				}else {
+					System.out.println("관리자가 아닙니다");
+				}
 			}else if(menu2 == 0) {
 				break;
 			}
@@ -250,6 +265,7 @@ public class BoardApp {
 			}
 			}
 		}else if(menu==4) {
+			if(id.equals("hr")) {
 			while(true) {
 			System.out.println("==================================================================================================");
 			System.out.println("관리자 메뉴");
@@ -273,6 +289,10 @@ public class BoardApp {
 			}else {
 				System.out.println("관리자가 아닙니다");
 				}
+			}
+			}
+			else {
+				System.out.println("관리자가 아닙니다");
 			}
 		}else if(menu == 5) {
 			

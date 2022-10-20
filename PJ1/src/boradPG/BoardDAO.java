@@ -488,4 +488,21 @@ public class BoardDAO extends DAO{
 		
 		 // 하나 불러오겟다	
 	}
+//아디찾기	
+	public void searchid(String mail) {
+		conn = getConnect();
+		String id = null;
+		String sql = "select * from Puser where user_mail = '" + mail + "'";
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			while(rs.next()) { //1번째 값을 불러와서
+				id = rs.getString("user_id");
+			}
+			System.out.println("아이디는 " +id + " 입니다.");
+	}catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	}
 }

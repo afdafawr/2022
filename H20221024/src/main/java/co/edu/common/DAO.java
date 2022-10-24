@@ -1,4 +1,4 @@
-package boradPG;
+package co.edu.common;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,16 +8,16 @@ import java.sql.Statement;
 
 public class DAO {
 	// Connection 객체를 반환해주는 getConnect
-	Connection conn;
-	Statement stmt;
-	ResultSet rs;
-	ResultSet rs2;
-	PreparedStatement psmt;
+	public Connection conn;
+	public Statement stmt;
+	public ResultSet rs;
+	public PreparedStatement psmt;
 	
 	public Connection getConnect() {
 	try {
 		Class.forName("oracle.jdbc.driver.OracleDriver");
-		conn = DriverManager.getConnection("jdbc:oracle:thin:@192.168.0.103:1521:xe", "hr", "hr"); //url 사용자계정 pw순
+		conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "kdu", "kdu"); //url 사용자계정 pw순
+		System.out.println("연결 성공");
 	}catch(Exception e) {
 		System.out.println("연결 실패");
 	}

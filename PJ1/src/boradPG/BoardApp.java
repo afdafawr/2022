@@ -48,7 +48,6 @@ public class BoardApp {
 				System.out.println("메일주소를 입력하세요");
 				scn.nextLine();
 				String mail = scn.nextLine();
-				System.out.println(mail);
 				dao.searchid(mail);
 			}
 			else if(first==4) {

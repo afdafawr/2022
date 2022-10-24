@@ -22,8 +22,6 @@ public class BoardDAO extends DAO{
 			str.add(rs.getString("user_id"));
 			str.add(rs.getString("user_pw"));
 			}
-			System.out.println(str.get(0));
-			System.out.println(str.get(1));
 			if(str.get(0).equals(id) && str.get(1).equals(pw)) {
 				System.out.println("로그인 성공");
 				chk = false;
@@ -53,10 +51,6 @@ public class BoardDAO extends DAO{
 			while(rs.next()) { //1번째 값을 불러와서
 			ids.add(rs.getString("user_id"));
 			}
-			System.out.println(user2.getId());
-			System.out.println(user2.getPw());
-			System.out.println(user2.getUser());
-			System.out.println(user2.getMail());
 			psmt = conn.prepareStatement(sql);
 			psmt.setString(1, user2.getId());
 			psmt.setString(2, user2.getPw());
@@ -138,6 +132,7 @@ public class BoardDAO extends DAO{
 				sql = "update Pboard_"+me+" set cnt = cnt+1 where board_num = " + borId;
 				psmt = conn.prepareStatement(sql);
 				psmt.executeUpdate();
+			
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}finally {
@@ -160,7 +155,6 @@ public class BoardDAO extends DAO{
 					+" '"+ bor.getTitle() + "', "
 					+"'"+ bor.getContent() + "', "
 					+"'"+ id+"')";
-			System.out.println(sql);
 			conn= getConnect();
 			try {
 			stmt = conn.createStatement();
@@ -446,8 +440,7 @@ public class BoardDAO extends DAO{
 			ranNum =  Integer.toString(createNum);  //1자리 난수를 String으로 형변환
 			resultNum += ranNum;			//생성된 난수(문자열)을 원하는 수(letter)만큼 더하며 나열
 		}	
-        System.out.println(resultNum);
-		
+        		
 		conn = getConnect();
 		MailApp mapp = new MailApp();
 		SmsApp app = new SmsApp();
@@ -473,12 +466,10 @@ public class BoardDAO extends DAO{
 			System.out.println("비밀번호를 재설정합니다.");
 			System.out.println("재설정할 비밀번호를 입력해주세요");
 			String cgpw = scn.nextLine();
-			sql = "update Puser set user_pw = '" + cgpw + "'";
+			sql = "update Puser set user_pw = '" + cgpw + "' where user_id = '" +id+ "'";
 			stmt.executeUpdate(sql);
 			System.out.println("비밀번호가 변경되었습니다");
 		}
-			System.out.println(pw);
-			System.out.println(tel);
 			
 //			app.sendSms(tel, "01045765728", pw);
 		} catch (SQLException e) {
@@ -486,7 +477,6 @@ public class BoardDAO extends DAO{
 			e.printStackTrace();
 		}
 		
-		 // 하나 불러오겟다	
 	}
 //아디찾기	
 	public void searchid(String mail) {

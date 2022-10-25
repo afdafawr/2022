@@ -12,15 +12,22 @@ import co.edu.service.MemberService;
 import co.edu.service.MemberServiceImpl;
 import co.edu.vo.MemberVO;
 
-public class MemberModifyForm implements Command {
+public class MemberModify implements Command {
 
 	@Override
 	public void exec(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
 		String id = req.getParameter("id");
-		req.setAttribute("id", id);
+		String pw = req.getParameter("password");
+		String name = req.getParameter("name");
+		String email = req.getParameter("email");
 		
-		HttpUtil.forward(req, resp, "memberView/memberUpdate.jsp");
+		MemberVO vo = new MemberVO(id, pw, name, email);
+		
+		MemberService service = new MemberServiceImpl();
+		service.modifyMember(vo);
+		
+		HttpUtil.forward(req, resp, "memberResult/memberUpdateOutput.jsp");
 	}
 
 }

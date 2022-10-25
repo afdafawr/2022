@@ -10,24 +10,18 @@ import co.edu.common.Command;
 import co.edu.common.HttpUtil;
 import co.edu.service.MemberService;
 import co.edu.service.MemberServiceImpl;
-import co.edu.vo.MemberVO;
 
-public class MemberModifyControl implements Command {
+public class MemberRemove implements Command {
 
 	@Override
 	public void exec(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		
 		String id = req.getParameter("id");
-		String pw = req.getParameter("password");
-		String name = req.getParameter("name");
-		String email = req.getParameter("email");
-		
-		MemberVO vo = new MemberVO(id, pw, name, email);
-		
 		MemberService service = new MemberServiceImpl();
-		service.modifyMember(vo);
+		service.removeMember(id);
 		
-		HttpUtil.forward(req, resp, "memberResult/memberUpdateOutput.jsp");
+		
+	HttpUtil.forward(req, resp, "memberResult/memberDeleteOutput.jsp");
+		
 	}
 
 }

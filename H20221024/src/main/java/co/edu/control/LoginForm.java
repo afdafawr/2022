@@ -8,19 +8,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import co.edu.common.Command;
 import co.edu.common.HttpUtil;
-import co.edu.service.MemberService;
-import co.edu.service.MemberServiceImpl;
-import co.edu.vo.MemberVO;
 
-public class MemberModifyForm implements Command {
+public class LoginForm implements Command {
 
 	@Override
 	public void exec(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		HttpUtil.forward(req, resp, "memberLog/loginForm.jsp");
 		
-		String id = req.getParameter("id");
-		req.setAttribute("id", id);
-		
-		HttpUtil.forward(req, resp, "memberView/memberUpdate.jsp");
 	}
 
 }

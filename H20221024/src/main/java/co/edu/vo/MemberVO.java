@@ -5,7 +5,16 @@ public class MemberVO {
 	private String passwd;
 	private String email;
 	private String name;
+	private String resposibility;
 	
+	public MemberVO(String id, String passwd, String email, String name, String resposibility) {
+		super();
+		this.id = id;
+		this.passwd = passwd;
+		this.email = email;
+		this.name = name;
+		this.resposibility = resposibility;
+	}
 	public MemberVO() {};
 	public MemberVO(String id,String passwd, String name, String email) {
 		this.id = id;
@@ -37,9 +46,16 @@ public class MemberVO {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public String getResposibility() {
+		return resposibility;
+	}
+	public void setResposibility(String resposibility) {
+		this.resposibility = resposibility;
+	}
 	@Override
 	public String toString() {
-		return "MemberVO [id=" + id + ", passwd=" + passwd + ", email=" + email + ", name=" + name + "]";
+		return "MemberVO [id=" + id + ", passwd=" + passwd + ", email=" + email + ", name=" + name + ", resposibility="
+				+ resposibility + "]";
 	}
-	
 }

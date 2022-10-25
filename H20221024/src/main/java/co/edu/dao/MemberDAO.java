@@ -20,8 +20,8 @@ public class MemberDAO extends DAO{
 //입력
 	public void memberInsert(MemberVO vo) {
 		
-		String sql = "insert into members(id,passwd,name,email) "
-				+ "values (?,?,?,?)";
+		String sql = "insert into members(id,passwd,name,email,resposibility) "
+				+ "values (?,?,?,?,'user')";
 		conn= getConnect();
 		try {
 			psmt = conn.prepareStatement(sql);
@@ -40,20 +40,21 @@ public class MemberDAO extends DAO{
 	}
 	
 	public MemberVO membersearch(String id) { //1건보기
-		MemberVO mem = new MemberVO();
+		MemberVO mem=null;
 		conn = getConnect();
 		try {
 			stmt = conn.createStatement();
-			String sql = "select * from user where id = '" + id + "'";
+			String sql = "select * from members where id = '" + id + "'";
 			rs = stmt.executeQuery(sql); // 하나 불러오겟다	
 			while(rs.next()) { //1번째 값을 불러와서
 				psmt = conn.prepareStatement(sql);
 				mem = new MemberVO(rs.getString("id"),
 								rs.getString("passwd"),
 								rs.getString("name"),
-								rs.getString("email"));
+								rs.getString("email"),
+								rs.getString("resposibility"));
+				
 			}
-			mem.toString();
 	        } catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
@@ -90,12 +91,8 @@ public class MemberDAO extends DAO{
 		conn = getConnect();
 		try {
 			stmt = conn.createStatement();
-			rs = stmt.executeQuery("SELECT * FROM user where id = '" + id + "'");
-			
-			while(rs.next()) { //1번째 값을 불러와서
-				String name = rs.getString("board_writer");
-			}
-				stmt.executeUpdate("delete from user where id='" + id + "'");
+			rs = stmt.executeQuery("SELECT * FROM members where id = '" + id + "'");
+			stmt.executeUpdate("delete from members where id='" + id + "'");
 		} catch (Exception e) {
 			System.out.println("지울수 없습니다");
 		}finally {
@@ -110,25 +107,45 @@ public class MemberDAO extends DAO{
 		System.out.println("글목록 연결성공");
 		try {
 			stmt = conn.createStatement();
-			rs = stmt.executeQuery("SELECT * FROM\r\n"
-					+ "(SELECT * FROM Pboard_G UNION SELECT * FROM Pboard_F UNION SELECT * FROM Pboard_Q)");
+			rs = stmt.executeQuery("select * from members");
 			while(rs.next()) { //1번째 값을 불러와서
 				mem.add(new MemberVO(rs.getString("id"),
 						rs.getString("passwd"),
 						rs.getString("name"),
 						rs.getString("email")));
 			}
-			System.out.println("==================================================================================================");
-			for(MemberVO b : mem) {
-				System.out.println(b);
-			}
-		
-		
 	}catch (SQLException e) {
 		e.printStackTrace();
 	}finally {
 		disconnect();
 	}	
 		return mem;
+	}
+	//String id, String passwd => MemberVO
+	public MemberVO login(String id, String passwd) {
+		getConnect();
+		String sql = "select * from members where id=? and passwd=?";
+		try {
+			psmt = conn.prepareStatement(sql);
+			psmt.setString(1, id);
+			psmt.setString(2, passwd);
+			
+			rs = psmt.executeQuery();
+		if(rs.next()) {
+			MemberVO vo = new MemberVO();
+			vo.setId(rs.getString("id"));
+			vo.setName(rs.getString("name"));
+			vo.setEmail(rs.getString("email"));
+			vo.setPasswd(rs.getString("passwd"));
+			vo.setResposibility(rs.getString("resposibility"));
+			return vo;
+		}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			disconnect();
+		}
+		return null;
 	}
 }

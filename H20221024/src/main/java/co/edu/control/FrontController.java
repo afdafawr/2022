@@ -17,10 +17,24 @@ public class FrontController extends HttpServlet{
 	@Override
 	public void init() throws ServletException {
 		control.put("/main.do", new Maincontrol());
+		//추가
 		control.put("/memberAddForm.do", new MemberAddForm());
 		control.put("/memberAdd.do", new MemberAddControl());
+		//수정
 		control.put("/memberModifyForm.do", new MemberModifyForm());
-		control.put("/memberModify.do", new MemberModifyControl());
+		control.put("/memberModify.do", new MemberModify());
+		//삭제
+		control.put("/memberRemoveForm.do", new MemberReomveForm());
+		control.put("/memberRemove.do", new MemberRemove());
+		//상세보기
+		control.put("/memberSearchForm.do", new MemberSearchForm());
+		control.put("/memberSearch.do", new MemberSearch());
+		//목록
+		control.put("/memberList.do", new MemberList());
+		//로그인관련
+		control.put("/loginForm.do", new LoginForm());
+		control.put("/login.do", new Login());
+		control.put("/loginOut.do", new Logout());
 	}
 	
 	@Override
@@ -29,11 +43,7 @@ public class FrontController extends HttpServlet{
 		String uri = req.getRequestURI();
 		String contextPath = req.getContextPath();
 		String path = uri.substring(contextPath.length());
-		
-		System.out.println(uri);
-		System.out.println(contextPath);
-		System.out.println(path);
-		
+				
 		Command command = control.get(path);
 		command.exec(req, resp);
 	}

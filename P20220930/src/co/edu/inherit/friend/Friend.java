@@ -20,7 +20,7 @@ public class Friend {
 		return this.name;
 	}
 	public String getPhone() {
-		returnn this.phone;
+		return this.phone;
 	}
 	public String showInfo() {
 		return "친구의 이름은" + name + ", 연락처는 " + phone;

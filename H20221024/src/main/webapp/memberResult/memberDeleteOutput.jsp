@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h3>정상적으로 등록되었습니다</h3>
-	<%@ include file="home.jsp" %>
+<h3>삭제가 완료되었습니다!</h3>
+<%@ include file="home.jsp" %>
 </body>
 </html>

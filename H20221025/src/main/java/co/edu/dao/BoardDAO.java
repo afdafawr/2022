@@ -45,7 +45,7 @@ public class BoardDAO extends DAO{
 	}
 	
 	public BoardVO searchBoard(int boardNO) {  //1건
-		
+		return null;
 	}
 	
 	public List<BoardVO> boardList(BoardVO vo){ //목록
@@ -92,10 +92,12 @@ public class BoardDAO extends DAO{
 		getConnect();
 		String sql ="update tbl_board set content = '"+vo.getContent() + "'"
 				+ " where board_no=1";
-		//처리건수가 0이면 false;		
+		//처리건수가 0이면 false;	
+		
 	}
 	
 	public boolean deleteBoard(int boardNo) {
 		//처리건수가 0이면 false;
+		return false;
 	}
 }

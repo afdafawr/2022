@@ -12,7 +12,7 @@
 	<form action ="./memberSearch.do" method="post">
 		<input type="hidden" name = "job" value = "delete">
 		ID: <input type="text" name = "id"><br>
-		<input type="submit" value = "조회니다">
+		<input type="submit" value = "조회f니다">
 	</form>
 	<%
 		MemberVO result = (MemberVO) request.getAttribute("memberInfo");
